@@ -37,7 +37,7 @@ const getContactsForDMList = async (req, res) => {
         let { userId } = req;
         userId = new mongoose.Types.ObjectId(userId)
 
-        console.log("userID is: ",userId);
+        console.log("userID is: ", userId);
         const contacts = await Messages.aggregate([
             {
                 $match: {
@@ -45,7 +45,7 @@ const getContactsForDMList = async (req, res) => {
                 },
             },
             {
-                $sort:{timeStamp:-1}
+                $sort: { timeStamp: -1 }
             },
             {
                 $group: {
@@ -68,20 +68,20 @@ const getContactsForDMList = async (req, res) => {
                 },
             },
             {
-                $unwind:"$contactInfo"
+                $unwind: "$contactInfo"
             },
             {
-                $project:{
-                    _id:1,
-                    lastMessageTime:1,
-                    email:"$contactInfo.email",
-                    firstName:"$contactInfo.firstName",
-                    lastName:"$contactInfo.lastName",
-                    image:"$contactInfo.image",
-                    color:"$contactInfo.color",
+                $project: {
+                    _id: 1,
+                    lastMessageTime: 1,
+                    email: "$contactInfo.email",
+                    firstName: "$contactInfo.firstName",
+                    lastName: "$contactInfo.lastName",
+                    image: "$contactInfo.image",
+                    color: "$contactInfo.color",
                 }
-            },{
-                $sort:{lastMessageTime:-1}
+            }, {
+                $sort: { lastMessageTime: -1 }
             }
         ]);
 
@@ -92,4 +92,20 @@ const getContactsForDMList = async (req, res) => {
     }
 };
 
-module.exports = { searchContacts, getContactsForDMList };
+const getAllContacts = async (req, res) => {
+    try {
+        const users = await User.find({ _id: { $ne: req.userId } }, "firstName lastName _id email")
+
+        const contacts = users.map((user) => ({
+            label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+            value: user._id,
+        }))
+
+        return res.status(200).json({ contacts });
+    } catch (error) {
+        console.log({ error });
+        return res.status(500).send("Internal server problem.");
+    }
+};
+
+module.exports = { searchContacts, getContactsForDMList, getAllContacts };
