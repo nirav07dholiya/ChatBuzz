@@ -83,9 +83,9 @@ const Profile = () => {
   const handleImageDelete = async () => {
     try {
       const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE, { withCredentials: true })
-      console.log({response:response});
+      console.log({ response: response });
       if (response.status === 200) {
-        setUserInfo({...userInfo, image: null});
+        setUserInfo({ ...userInfo, image: null });
         toast.success('Image removed successfully.')
         setImage(null);
       }
@@ -170,11 +170,11 @@ const Profile = () => {
             </div>
             <div className="w-full flex gap-5">
               {colors.map((color, index) => (
-                <div 
+                <div
                   className={`${color} h-8 w-8 rounded-full cursor-pointer transition-all duration-300 ${selectedColor == index
                     ? "outline outline-white/50 outline-2"
                     : ""
-                    } ` }
+                    } `}
                   key={index}
                   onClick={() => setSelectedColor(index)}
                 ></div>
