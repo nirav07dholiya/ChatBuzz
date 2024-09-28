@@ -7,6 +7,7 @@ const router = require("./routes/Auth");
 const contactRouter = require("./routes/Contact");
 const setupSocket = require("./socket");
 const messagesRouter = require("./routes/Messages");
+const channelRoutes = require("./routes/Channel");
 
 dotenv.config();
 
@@ -28,7 +29,8 @@ app.use(express.json());
 
 app.use("/api/auth",router);
 app.use("/api/contacts",contactRouter);
-app.use("/api/messages",messagesRouter)
+app.use("/api/messages",messagesRouter);
+app.use("/api/channel",channelRoutes);
 
 const server = app.listen(port, () => {
     mongoose.connect(databaseURL).then(() => {
