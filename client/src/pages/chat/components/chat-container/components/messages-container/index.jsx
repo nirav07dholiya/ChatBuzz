@@ -9,12 +9,11 @@ import { IoCloseSharp } from "react-icons/io5";
 
 const MessagesContainer = () => {
   const scrollRef = useRef();
-  const [ showImage, setShowImage ] = useState(false);
-  const [ imageUrl, setImageUrl ] = useState(null);
+  const [showImage, setShowImage] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
   const {
     selectedChatData,
     selectedChatType,
-    userInfo,
     selectedChatMessages,
     setSelectedChatMessages,
     setIsDownloading,
@@ -28,7 +27,7 @@ const MessagesContainer = () => {
           GET_ALL_MESSAGES_ROUTE,
           { id: selectedChatData._id },
           { withCredentials: true }
-        ); 
+        );
         if (response.data.messages) {
           setSelectedChatMessages(response.data.messages);
         }
@@ -76,14 +75,16 @@ const MessagesContainer = () => {
   const downloadFile = async (url) => {
     setIsDownloading(true)
     setFileDownloadProgress(0)
+
     const response = await apiClient.get(`http://localhost:8747/${url}`, {
       responseType: "blob",
-      onDownloadProgress:(ProgressEvent)=>{
-        const {loaded,total}=ProgressEvent;
-        const percentComplated = Math.round((loaded*100)/total)
+      onDownloadProgress: (ProgressEvent) => {
+        const { loaded, total } = ProgressEvent;
+        const percentComplated = Math.round((loaded * 100) / total)
         setFileDownloadProgress(percentComplated)
       }
     });
+
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
     link.href = urlBlob;
@@ -104,8 +105,8 @@ const MessagesContainer = () => {
       {message.messageType === "text" && (
         <div
           className={`${message.sender !== selectedChatData._id
-              ? "bg-orange-500/5 text-orange-500/90 border-orange-500/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+            ? "bg-orange-500/5 text-orange-500/90 border-orange-500/50"
+            : "bg-[#2a2b33]/5 text-white/80 border-white/20"
             } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
         >
           {message.content}
@@ -114,8 +115,8 @@ const MessagesContainer = () => {
       {message.messageType === "file" && (
         <div
           className={`${message.sender !== selectedChatData._id
-              ? "bg-orange-500/5 text-orange-500/90 border-orange-500/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+            ? "bg-orange-500/5 text-orange-500/90 border-orange-500/50"
+            : "bg-[#2a2b33]/5 text-white/80 border-white/20"
             } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
         >
           {checkIfImage(message.fileUrl) ? (

@@ -3,14 +3,14 @@ import NewDM from './new-dm';//
 import ProfileInfo from './profile-info';
 import { useEffect } from 'react';
 import { apiClient } from '@/lib/api-client';
-import { GET_CONTACTS_FOR_DM } from '@/utils/constants';
+import { GET_CONTACTS_FOR_DM, GET_USER_CHANNELS_ROUTE } from '@/utils/constants';
 import useAppStore from '@/store';
 import ContactList from '@/components/contact-list';
 import CreateChannel from './create-channel';
 
 const ContactContainer = () => {
 
-  const {setDirectMessageContacts,directMessageContacts}=useAppStore();
+  const {setDirectMessageContacts,directMessageContacts,channels,setChannels}=useAppStore();
 
   useEffect(()=>{
     const getContacts = async()=>{
@@ -18,8 +18,17 @@ const ContactContainer = () => {
       if (response.data.contacts) {
         setDirectMessageContacts(response.data.contacts);
       }
+
+    }
+    const getChannels = async()=>{
+      const response = await apiClient.get(GET_USER_CHANNELS_ROUTE,{withCredentials:true})
+      if (response.data.channels) {
+        setChannels(response.data.channels);
+      } 
+
     }
     getContacts()
+    getChannels()
   },[setDirectMessageContacts])
 
   return (
@@ -40,6 +49,9 @@ const ContactContainer = () => {
         <div className="flex items-center justify-between pr-10">
           <Title text="channels"/>
           <CreateChannel/> 
+        </div>
+        <div className="max-h-[30vh] overflow-y-auto scrollbar-hide">
+          <ContactList contacts={channels} isChannel={true}/>
         </div>
       </div>
       <ProfileInfo/>

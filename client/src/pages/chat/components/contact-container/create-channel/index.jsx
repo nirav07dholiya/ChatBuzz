@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { apiClient } from "@/lib/api-client";
 import {
+    CREATE_CHANNEL_ROUTE,
     GET_ALL_CONTACTS_ROUTE,
 } from "@/utils/constants";
 import useAppStore from "@/store";
@@ -22,10 +23,9 @@ import { Button } from "@/components/ui/button";
 import MultipleSelector from "@/components/ui/multipleselect";
 
 const CreateChannel = () => {
-    const { setSelectedChatType, setSelectedChatData, selectedChatType } =
+    const { setSelectedChatType, setSelectedChatData, addChannel } =
         useAppStore();
     const [newChannelModal, setNewChannelModal] = useState(false);
-    const [searchedContact, setSearchedContact] = useState([]);
     const [allContacts, setAllContacts] = useState([]);
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [channelName, setChannelName] = useState("");
@@ -40,7 +40,23 @@ const CreateChannel = () => {
         getData()
     }, []);
 
-    const createChannel = async () => { };
+    const createChannel = async () => { 
+        try {
+            if(channelName.length>0 && selectedContacts.length>0){
+                const respornse = await apiClient.post(CREATE_CHANNEL_ROUTE,{name:channelName,members:selectedContacts.map((contact)=>contact.value)},{withCredentials:true})
+                if(respornse.status==201){
+                    setChannelName("")
+                    setSelectedContacts([])
+                    setNewChannelModal(false)
+                    addChannel(respornse.data.channel)
+                    
+                }
+
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <>
             <TooltipProvider>
