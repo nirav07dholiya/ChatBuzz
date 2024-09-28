@@ -8,19 +8,19 @@ const channelSchema = new mongoose.Schema({
     members: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
+            ref: "User",
             required: true,
         },
     ],
     admin: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
         required: true,
     },
     messages: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "messages",
+            ref: "Messages",
             required: true,
         },
     ],
@@ -44,6 +44,6 @@ channelSchema.pre("findOneAndUpDate", function (next) {
     next();
 });
 
-const Channel = mongoose.model("channels",channelSchema)
+const Channel = mongoose.model("channels", channelSchema)
 
 module.exports = Channel
