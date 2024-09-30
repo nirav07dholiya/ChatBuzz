@@ -234,7 +234,7 @@ const MessagesContainer = () => {
         </div>
       )}
         {message.sender._id !== userInfo.id ? (
-          <div className="flex items-center justify-start gap3`">
+          <div className="flex items-center justify-start gap-3">
             <Avatar className="h-8 w-8 rounded-full overflow-hidden">
               {message.sender.image && (
                 <AvatarImage
@@ -255,7 +255,7 @@ const MessagesContainer = () => {
             </Avatar>
             <span className="text-sm text-white/60">{`${message.sender.firstName} ${message.sender.lastName}`}</span>
             <span className="text-xs text-white/60">
-              {moment(message.timeStamp).format("LT")}
+              { moment(message.timeStamp).format("LT")}
             </span>
           </div>
         ) : (
